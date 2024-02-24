@@ -1,43 +1,12 @@
-Thank you for downloading Freelancer: HD Edition!
+Thank you for downloading Freelancer: BMOD!
 
-Make sure you join our Discord server at https://discord.gg/ScqgYuFqmU so you always stay up to date with the latest news and information regarding the mod!
+Make sure you join our Discord server at https://discord.gg/fCWtT3Ju8S so you always stay up to date with the latest news and information regarding the mod!
 
-If you encounter any issues related to this mod during installation or gameplay, please refer to the wiki at https://github.com/BC46/freelancer-hd-edition/wiki for potential solutions. In case none of these work, join our Discord server https://discord.gg/ScqgYuFqmU and we'll help you out. You may also create an issue related to the mod or installer here:
-Mod: https://github.com/BC46/freelancer-hd-edition/issues
-Installer: https://github.com/oliverpechey/Freelancer-hd-edition-install-script/issues
+If you encounter any issues related to this mod during installation or gameplay, please refer to the HD edition wiki at https://github.com/BC46/freelancer-hd-edition/wiki for potential solutions to common Freelancer problems. In case none of these work, join our Discord server https://discord.gg/fCWtT3Ju8S and we'll help you out. You may also create an issue related to the mod or installer here:
+Mod: https://github.com/better-modernized-combat/bmod-client/issues
+Installer: https://github.com/better-modernized-combat/bmod-installer/issues
 
 To continue the installation process, click "Next".
 
-Mod key features:
-HD Space Stations
-HD Ships
-HD Planets
-HD Effects
-HD Asteroids
-HD Character Models
-HD Base Interiors & Planetscapes
-HD HUD & Icons
-HD Nebulae
-HD Starspheres
-Maximized Draw Distances
-Anti-Aliasing and Anisotropic Filtering support
-ReShade
-HQ Music
-Windows 10 & 11 compatibility fixes
-Jason's Freelancer Patch
-Full Widescreen support
-Improvements
-New features
-Bug fixes
-flplusplus
-No-CD Patch
-Official 1.1 Patch
-Tons of additional bug fixes
-Additional gameplay improvements
-Easy customization
-Full vanilla Multiplayer support
-
-Mod files: https://github.com/BC46/freelancer-hd-edition
-Installer source code: https://github.com/oliverpechey/Freelancer-hd-edition-install-script
-
-Have something to contribute to make the mod or the installer even better? Feel free to create a pull request at either of the two GitHub repositories! We are always open to new suggestions and improvements. Making the mod files public has allowed us as a community to create the best possible HD mod for Freelancer out there since many modders from around the world have contributed to this project.
+Mod files: https://github.com/better-modernized-combat/bmod-client
+Installer source code: https://github.com/better-modernized-combat/bmod-installer

@@ -201,45 +201,6 @@ begin
   Result := Trunc(Single(DesktopRes.Width) / DesktopRes.Height * 100.0) / 100.0 = 1.33
 end;
 
-// Converts an int to hex
-function IntToHex(Value: Integer; Digits: Integer): string;
-begin
-  Result := Format('%.*x', [Digits, Value])
-end;
-
-// Swaps 2 bytes in a binary string (2 bytes, or 4 characters assumed)
-function SwapBytes(BinaryString: string): string;
-begin
-  Result := BinaryString[3] + BinaryString[4] + BinaryString[1] + BinaryString[2] 
-end;
-
-// Used to convert a binary expression in string format to an actual binary stream
-function ConvertHexToBinary(hexString: string; hexLength: LongWord; binaryString: string): Boolean;
-  external 'ConvertHexToBinary@files:HexToBinary.dll cdecl setuponly delayload';
-
-// Used to perform a hex edit in a file at a specific location
-procedure WriteHexToFile(FileName: string; Offset: longint; Hex: string);
-var
-  Stream: TFileStream;
-  Buffer: string;
-  Size: LongWord;
-begin
-  Stream := TFileStream.Create(FileName, fmOpenReadWrite);
-
-  try
-    SetLength(Buffer, (Length(Hex) div 4) + 1);
-    Size := Length(Hex) div 2;
-
-    if not ConvertHexToBinary(Hex, Length(Hex), Buffer) then
-      RaiseException('Could not convert string to binary stream');
-
-    Stream.Seek(Offset, soFromBeginning);
-    Stream.WriteBuffer(Buffer, Size);
-  finally
-    Stream.Free;
-  end;
-end;
-
 // Returns true if the directory is empty
 function isEmptyDir(dirName: String): Boolean;
 var

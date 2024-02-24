@@ -1,22 +1,20 @@
-; Inno Install Script for Freelancer: HD Edition
-; GitHub: https://github.com/oliverpechey/Freelancer-hd-edition-install-script
-; Main GitHub: https://github.com/BC46/Freelancer-hd-edition
+; Inno Install Script for Freelancer: BMOD
+; Forked from https://github.com/oliverpechey/Freelancer-HD-Edition-Installer
 
-#define MyAppVersion "0.6"
-#define MyAppName "Freelancer: HD Edition v" + MyAppVersion
-#define MyAppPublisher "Freelancer: HD Edition Development Team"
-#define MyAppURL "https://github.com/BC46/freelancer-hd-edition"
+#define MyAppVersion "0.1"
+#define MyAppName "Freelancer: Better Modernized Combat v" + MyAppVersion
+#define MyAppPublisher "Freelancer: BMOD Development Team"
+#define MyAppURL "https://github.com/better-modernized-combat"
 #define MyAppExeName "Freelancer.exe"
-#define MyFolderName "freelancer-hd-edition-" + MyAppVersion
-#define MyZipName "freelancerhd"
+#define MyFolderName "freelancer-bmod-" + MyAppVersion
+#define MyZipName "freelancerbmod"      
 ; This variable controls whether the zip is shipped with the exe or downloaded from a mirror
 #define AllInOneInstall true
-#dim Mirrors[2] {"https://archive.org/download/freelancer-hd-edition-" + MyAppVersion + "/freelancer-hd-edition-" + MyAppVersion + ".7z", "https://github.com/BC46/freelancer-hd-edition/archive/refs/tags/" + MyAppVersion + ".zip"}
-; TODO: Update sizes for each release
+#dim Mirrors[1] {"https://github.com/better-modernized-combat/bmod-client/archive/refs/tags/" + MyAppVersion + ".zip"}
 #if AllInOneInstall
-  #define SizeZip 0 ; The zip size is already included in the pre-calculated required diskspace
+  #define SizeZip 0 
 #else
-  #define SizeZip 2688696320 ; The zip provided by the GitHub mirror is larger than the archive.org one
+  #define SizeZip 2688696320 
 #endif
 #define SizeExtracted 4646719488
 #define SizeVanilla 985624576
@@ -25,7 +23,7 @@
 
 [Setup]
 AllowNoIcons=yes
-AppId={{F40FDCDA-3A45-4CC3-9FDA-167EE480A1E0}
+AppId={{Q40FDCWA-3A45-4CC3-9FDA-167EE480A1E0}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
@@ -34,13 +32,13 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ChangesAssociations=yes
 Compression=lzma
-DefaultDirName={sd}\Games\Freelancer HD Edition
-DefaultGroupName=Freelancer HD Edition
+DefaultDirName={userappdata}\Freelancer BMOD
+DefaultGroupName=Freelancer BMOD
 DisableWelcomePage=False
 DisableDirPage=False
 ExtraDiskSpaceRequired = {#SizeAll}
 InfoBeforeFile={#SourcePath}\Assets\Text\installinfo.txt
-OutputBaseFilename=FreelancerHDSetup
+OutputBaseFilename=FreelancerBMODSetup
 SetupIconFile={#SourcePath}\Assets\Images\icon.ico
 SolidCompression=yes
 UninstallDisplayIcon={#SourcePath}\Assets\Images\icon.ico
@@ -58,7 +56,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\EXE\{#MyAppExeName}"
-Name: "{commondesktop}\Freelancer HD Edition"; Filename: "{app}\EXE\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\Freelancer BMOD"; Filename: "{app}\EXE\{#MyAppExeName}"; Tasks: desktopicon
 
 [Files]
 Source: "Assets\Text\installinfo.txt"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
@@ -68,20 +66,24 @@ Source: "Assets\Fonts\AGENCYR.TTF"; DestDir: "{autofonts}"; FontInstall: "Agency
 Source: "Assets\Fonts\AGENCYR_CR.TTF"; DestDir: "{autofonts}"; FontInstall: "Agency FB Cyrillic"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "Assets\Fonts\ARIALUNI.TTF"; DestDir: "{autofonts}"; FontInstall: "Arial Unicode MS"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "Assets\External\7za.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall;
-Source: "Assets\External\utf-8-bom-remover.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall;
-Source: "Assets\External\HexToBinary.dll"; Flags: dontcopy;
+Source: "Assets\External\flcombinedpatch.7z"; DestDir: "{tmp}"; Flags: deleteafterinstall;
+Source: "Scripts\vcredist.ps1"; DestDir: "{tmp}"
+
 # if AllInOneInstall
-Source: "Assets\Mod\freelancerhd.7z"; DestDir: "{tmp}"; Flags: nocompression deleteafterinstall
+Source: "Assets\Mod\freelancerbmod.7z"; DestDir: "{tmp}"; Flags: nocompression deleteafterinstall
 #endif
 
 [Run]
+Filename: "powershell.exe"; \
+  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\vcredist.ps1"""; \
+  WorkingDir: {app}; Flags: runhidden
 Filename: "{app}\EXE\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 
 [Messages]
-WelcomeLabel2=Freelancer: HD Edition is a mod that aims to improve every aspect of the game Freelancer (2003) while keeping the look and feel as close to vanilla as possible. It also serves as an all-in-one package for players so they don't have to worry about installing countless patches and mods to create the perfect HD and bug-free install.%n%nThis installer requires a clean, freshly installed Freelancer directory.
+WelcomeLabel2=Freelancer: Better Modernized Combat (BMOD) is a modification for Freelancer, the 2003 space shooter by Chris Roberts. The core goal of the mod is to create a fun and compelling PvE experience for solo and group players in a multiplayer setting.%n%nThis installer requires a clean, freshly installed Freelancer directory.
 FinishedLabel=Setup has finished installing [name] on your computer. The application may be launched by selecting the installed shortcut.%n%nNOTE: [name] has been installed as a separate application. Therefore, your vanilla Freelancer installation has not been modified and can still be played at any time.
 
 [Code]
@@ -100,8 +102,6 @@ var
 // Imports from other .iss files
 #include "utilities.iss"
 #include "ui.iss"
-#include "mod_options.iss"
-
 // Checks which step we are on when it changed. If its the postinstall step then start the actual installing
 procedure CurStepChanged(CurStep: TSetupStep);
 var
@@ -123,6 +123,7 @@ begin
         // Unzip
         WizardForm.StatusLabel.Caption := ExpandConstant('Unpacking {#MyAppName}...');
         Exec(ExpandConstant('{tmp}\7za.exe'), ExpandConstant(' x -y -aoa "{tmp}\{#MyZipName}.7z"  -o"{app}"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+        Exec(ExpandConstant('{tmp}\7za.exe'), ExpandConstant(' x -y -aoa "{tmp}\flcombinedpatch.7z"  -o"{app}"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
         // -aoa Overwrite All existing files without prompt
         // -o Set output directory
         // -y Assume "Yes" on all Queries
@@ -138,51 +139,8 @@ begin
 
         // Process options
         WizardForm.StatusLabel.Caption := 'Processing your options...';
-        Process_CallSign();
-        Process_PitchVariations();
-        Process_EnglishImprovements();
-        Process_SinglePlayerMode();
-        Process_NewSaveFolder();
-        Process_LevelRequirements();
-        Process_StartUpLogo();
-        Process_FreelancerLogo();
-        Process_SmallText(); // Must be called before Process_RussianFonts();
-        Process_RussianFonts(); // Must be called after Process_SmallText();
-        Process_Console();
-        Process_BestOptions();
-        Process_Effects();
-        Process_SkipIntros();
-        Process_JumpTunnelDurations();
-        Process_DrawDistances();
-        Process_Planetscape();
-        Process_Win10(); // Must be called before Process_DgVoodoo();
-        Process_HUD(); // Must be called before Process_CustomIcons(); and Process_WeaponGroups();
-        Process_DarkHUD();
-        Process_CustomIcons(); // Must be called after Process_HUD();
-        Process_WeaponGroups(); // Must be called after Process_HUD();
-        Process_DxWrapper();
-        Process_DxWrapperReShade();
-        Process_DgVoodooReShade();
-        Process_DgVoodoo(); // Must be called after Process_Win10();
-        Process_DisplayMode();
-
         WizardForm.StatusLabel.Caption := 'Cleaning up...';
         UpdateProgress(95);
-
-        if not Wine then
-        begin
-          // Delete potential UTF-8 BOM headers in all edited config files. May not work properly on Wine.
-          for i := 0 to EditedConfigFiles.Count - 1 do
-            RemoveBOM(EditedConfigFiles[i]);
-        end else
-        begin
-          // Write d3d8 DLL override for Wine/Linux. For more information, see https://wiki.winehq.org/Wine_User%27s_Guide#DLL_Overrides
-          RegWriteStringValue(HKEY_CURRENT_USER, 'Software\Wine\DllOverrides', 'd3d8', 'native,builtin');
-        end;
-
-        // Delete restart.fl to stop crashes
-        DeleteFile(ExpandConstant('{userdocs}\My Games\Freelancer\Accts\SinglePlayer\Restart.fl'));
-        DeleteFile(ExpandConstant('{userdocs}\My Games\FreelancerHD\Accts\SinglePlayer\Restart.fl'));
 
         // Remove 2003 junk files
         RemoveJunkFiles('dll');
@@ -205,44 +163,7 @@ var
   i : Integer;
   RefreshRateError: String;
 begin
-    Result := True;
-
-    // TODO next update: add 'and (GpuManufacturer = AMD)' as additional condition to the if-statement below
-    if (PageId = DgVoodooPage.ID) then
-    begin
-      RefreshRateError := 'Refresh rate must be a valid number between 30 and 3840. If you don''t know how to find your monitor''s refresh rate, look it up on the internet.'
-        + #13#10#13#10 + 'Keep in mind that the DxWrapper graphics API from the previous page does not require you to set a refresh rate manually.'
-
-      // dgVoodoo options page refresh rate validation
-      // Checks if the input is a valid number between 30 and 3840
-      if (StrToInt(DgVoodooRefreshRate.Text) < 30) or (StrToInt(DgVoodooRefreshRate.Text) > 3840) then
-        begin
-          MsgBox(RefreshRateError, mbError, MB_OK);
-          Result := False;
-          Exit;
-        end;
-
-      // Checks if the input consists entirely of digits
-      for i := 1 to Length(DgVoodooRefreshRate.Text) do
-      begin
-        if not IsDigit(DgVoodooRefreshRate.Text[i]) then
-        begin
-          MsgBox(RefreshRateError, mbError, MB_OK);
-          Result := False;
-          Exit;
-        end;
-      end;
-    end;
-
-    // If the user has selected the "do not pause on Alt-Tab" option, ask them if they want the game audio to continue playing in the background too.
-    if (PageId = PageMiscOptions.ID) and (DoNotPauseOnAltTab.Checked) then
-    begin
-      MusicInBackground := MsgBox(
-        'Freelancer will continue running in the background when Alt-Tabbed. Would you also like the game''s audio to continue playing in the background?' + #13#10 + #13#10 + 
-        'You may not want this if you''re planning to run multiple instances of Freelancer simultaneously.',
-        mbConfirmation, MB_YESNO) = IDYES
-    end;
-
+    Result := True
     // If they specify an offline file in the cmd line. Check if it's valid, if not don't let them continue.
     # if !AllInOneInstall
     if ((PageId = 1) and (OfflineInstall <> 'false') and (not FileExists(OfflineInstall) or (Pos('.7z',OfflineInstall) < 1))) then begin
@@ -276,13 +197,13 @@ begin
     if (PageId = 6) then begin
       // Needs to be in a seperate if statement since it tries to expand {app} even if not on PageID 6. Pascal what are you doing!
       if(Pos(AddBackslash(DataDirPage.Values[0]),ExpandConstant('{app}')) > 0) then begin
-        MsgBox('Freelancer: HD Edition cannot be installed to the same location as your vanilla install. Please select a new location.', mbError, MB_OK);
+        MsgBox('Freelancer: BMOD cannot be installed to the same location as your vanilla install. Please select a new location.', mbError, MB_OK);
         Result := False;
         exit;
       end;
       // Check the install directory is empty
       if(not isEmptyDir(ExpandConstant('{app}'))) then begin
-        MsgBox('Freelancer: HD Edition cannot be installed to a directory that is not empty. Please empty this directory or choose another one.', mbError, MB_OK);
+        MsgBox('Freelancer: BMOD cannot be installed to a directory that is not empty. Please empty this directory or choose another one.', mbError, MB_OK);
         Result := False;
         exit;
       end;
@@ -303,7 +224,7 @@ begin
           i := mirrors.Count - 1;
         except
           if(i = mirrors.Count - 1) then
-            SuppressibleMsgBox('All downloads failed. Please contact us on Discord: https://discord.gg/ScqgYuFqmU', mbError, MB_OK, IDOK)
+            SuppressibleMsgBox('All downloads failed. Please contact us on Discord: https://discord.gg/fCWtT3Ju8S', mbError, MB_OK, IDOK)
           else
             if SuppressibleMsgBox('Download failed. Do you want to try downloading with an alternate mirror?', mbError, MB_RETRYCANCEL, IDRETRY) = IDCANCEL then
               i := mirrors.Count - 1;
