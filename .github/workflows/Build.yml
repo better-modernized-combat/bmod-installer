@@ -20,7 +20,7 @@ jobs:
           repository: "better-modernized-combat/bmod-client"
           fileName: "Release.7z"
           latest: true
-          extract: true
+          extract: false
 
       - name: Get current date
         id: date
