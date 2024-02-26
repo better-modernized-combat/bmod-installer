@@ -61,6 +61,7 @@ jobs:
         with:
             fetch-depth: 0
             path: staging
+            token: ${{ secrets.PAT }}
 
       - name: Copy new Release.7z file
         if: env.NEW == 'true' 
