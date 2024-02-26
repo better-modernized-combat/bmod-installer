@@ -86,7 +86,8 @@ jobs:
             tag_name: ${{ steps.download-release.outputs.tag_name }}
             release_name: "${{ steps.extract_changelog.outputs.version }} | ${{ steps.date.outputs.date }}"
             body: |
-                ${{ steps.extract_changelog.outputs.body }}
+                ${{ steps.extract_changelog.outputs.body }} 
+                This installer has been generated from the latest release of the [BMOD Client](https://github.com/better-modernized-combat/bmod-client) repository.
             draft: false
             prerelease: false
 
