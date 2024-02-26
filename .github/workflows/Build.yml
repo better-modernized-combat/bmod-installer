@@ -4,8 +4,6 @@ on: push
 jobs:
   build-installer:
     runs-on: windows-latest
-    permissions:
-            contents: write
     if: ${{ !contains(github.event.head_commit.message, 'Update BMOD') }}
     steps:
       - name: Get last BMOD Client tag
@@ -63,6 +61,8 @@ jobs:
         with:
             fetch-depth: 0
             path: staging
+            token: ${{ secrets.PAT }}
+
       - name: Copy new Release.7z file
         if: env.NEW == 'true' 
         run: |
