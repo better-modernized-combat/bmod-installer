@@ -41,7 +41,7 @@ jobs:
       - name: Copy new Release.7z file
         if: env.NEW == 'true'
         run: |
-            Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\Assets\Mod\freelancerbmod.7z
+            Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\staging\Assets\Mod\freelancerbmod.7z
 
       - name: Install Inno
         run: |
