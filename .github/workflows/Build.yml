@@ -2,7 +2,7 @@ name: build
 on: push
 
 jobs:
-  bmod-client:
+  build-installer:
     runs-on: windows-latest
     if: ${{ !contains(github.event.head_commit.message, 'Update BMOD') }}
     steps:
@@ -101,3 +101,15 @@ jobs:
             asset_path: ${{ github.workspace }}\staging\Output\FreelancerBMODSetup.exe
             asset_name: FreelancerBMODSetup.exe
             asset_content_type: application/exe
+      - name: Commit to branch
+        if: env.NEW == 'true'
+        env:
+            TAG: ${{steps.download-release.outputs.tag_name}}
+        run: |
+            cd staging
+            echo $env:TAG > .github/workflows/bmodtag
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .github/workflows/bmodtag
+            git commit -m "Update FLHook to $env:TAG"
+            git push
