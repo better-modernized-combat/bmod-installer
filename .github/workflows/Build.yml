@@ -25,6 +25,29 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+
+      - name: Extract information from CHANGELOG.md
+        id: extract_changelog
+        shell: bash
+        run: |
+          res=$''
+          changelog="$(curl https://raw.githubusercontent.com/better-modernized-combat/bmod-client/main/CHANGELOG.md)"
+          while read -r line; do    
+            if [[ "$line" =~ ^##[[:space:]][[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+ ]]; then
+              if [ -z "$version" ]; then
+                version=${line:2}
+              else
+                break
+              fi
+            else
+              if [ ! -z "$version" ]; then
+                res+="${line//\r@Q}\n"
+              fi
+            fi
+          done < CHANGELOG.md
+          echo -e "version<<EOF"$'\n'"$version"$'\n'EOF >> $GITHUB_OUTPUT
+          echo -e "body<<EOF"$'\n'$res$'\n'EOF >> $GITHUB_OUTPUT
+
           
       - name: Is there a new release?
         env:
@@ -60,9 +83,9 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
             tag_name: ${{ steps.download-release.outputs.tag_name }}
-            release_name: "${{ steps.download-release.outputs.tag_name }} | ${{ steps.date.outputs.date }}"
+            release_name: "${{ steps.extract_changelog.outputs.version }} | ${{ steps.date.outputs.date }}"
             body: |
-                ${{ steps.download-release.outputs.tag_name }}
+                ${{ steps.extract_changelog.outputs.body }}
             draft: false
             prerelease: false
 
