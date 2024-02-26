@@ -1,24 +1,118 @@
-name: Build
-on: push
+name: build
+on: 
+    push:
+        branches:
+            - main
 jobs:
-  build:
+  build-installer:
     runs-on: windows-latest
+    if: ${{ !contains(github.event.head_commit.message, 'Update BMOD') }}
     steps:
-        - name: Check out repository code
-          uses: actions/checkout@v2
-          with:
-            fetch-depth: 0
-        
-        - name: Install Inno
-          run: |
-            choco install innosetup
+      - name: Get last BMOD Client tag
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: .github/workflows/bmodtag
+          sparse-checkout-cone-mode: false
+          path: check
+          
+      - name: Download latest BMOD Client release
+        id: download-release
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "better-modernized-combat/bmod-client"
+          fileName: "Release.7z"
+          latest: true
+          extract: false
 
-        - name: Add mod zip
-          run: |
-            type NUL > ${{ github.workspace }}\Assets\Mod\freelancerbmod.7z
-          shell: cmd
-            
-        - name: Compile script
-          run: |
-            "%programfiles(x86)%\Inno Setup 6\iscc.exe" "setup.iss"
-          shell: cmd
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+
+      - name: Extract information from CHANGELOG.md
+        id: extract_changelog
+        shell: bash
+        run: |
+          res=$''
+          curl https://raw.githubusercontent.com/better-modernized-combat/bmod-client/main/CHANGELOG.md > changelog.md
+          changelog="$(cat changelog.md)"
+          while read -r line; do    
+            if [[ "$line" =~ ^##[[:space:]][[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+ ]]; then
+              if [ -z "$version" ]; then
+                version=${line:2}
+              else
+                break
+              fi
+            else
+              if [ ! -z "$version" ]; then
+                res+="${line//\r@Q}\n"
+              fi
+            fi
+          done < CHANGELOG.md
+          echo -e "version<<EOF"$'\n'"$version"$'\n'EOF >> $GITHUB_OUTPUT
+          echo -e "body<<EOF"$'\n'$res$'\n'EOF >> $GITHUB_OUTPUT
+
+          
+      - name: Is there a new release?
+        env:
+          TAG: ${{steps.download-release.outputs.tag_name}}
+        run: if( (Get-Content -Path .\check\.github\workflows\bmodtag) -ne $env:TAG ) { echo "NEW=true" >> $env:GITHUB_ENV }
+
+      - name: Check out repository code
+        if: env.NEW == 'true'
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+            path: staging
+            token: ${{ secrets.PAT }}
+
+      - name: Copy new Release.7z file
+        if: env.NEW == 'true' 
+        run: |
+            Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\staging\Assets\Mod\freelancerbmod.7z
+
+      - name: Install Inno
+        run: |
+            choco install innosetup --acceptlicense
+
+      - name: Compile script
+        run: |
+            "%programfiles(x86)%\Inno Setup 6\iscc.exe" "${{ github.workspace }}\staging\setup.iss"
+        shell: cmd
+
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ steps.download-release.outputs.tag_name }}
+            release_name: "${{ steps.extract_changelog.outputs.version }} | ${{ steps.date.outputs.date }}"
+            body: |
+                ${{ steps.extract_changelog.outputs.body }} 
+                This installer has been generated from the latest release of the [BMOD Client](https://github.com/better-modernized-combat/bmod-client) repository.
+            draft: false
+            prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} 
+            asset_path: ${{ github.workspace }}\staging\Output\FreelancerBMODSetup.exe
+            asset_name: FreelancerBMODSetup.exe
+            asset_content_type: application/exe
+      - name: Commit to branch
+        if: env.NEW == 'true'
+        env:
+            TAG: ${{steps.download-release.outputs.tag_name}}
+        run: |
+            cd staging
+            echo $env:TAG > .github/workflows/bmodtag
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .github/workflows/bmodtag
+            git commit -m "Update BMOD to $env:TAG"
+            git push
