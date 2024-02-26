@@ -31,7 +31,8 @@ jobs:
         shell: bash
         run: |
           res=$''
-          changelog="$(wget https://raw.githubusercontent.com/better-modernized-combat/bmod-client/main/CHANGELOG.md)"
+          curl https://raw.githubusercontent.com/better-modernized-combat/bmod-client/main/CHANGELOG.md > changelog.md
+          changelog="$(cat changelog.md)"
           while read -r line; do    
             if [[ "$line" =~ ^##[[:space:]][[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+ ]]; then
               if [ -z "$version" ]; then
