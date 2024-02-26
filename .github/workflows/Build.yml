@@ -1,24 +1,78 @@
-name: Build
+name: build
 on: push
+
 jobs:
-  build:
+  bmod-client:
     runs-on: windows-latest
+    if: ${{ !contains(github.event.head_commit.message, 'Update BMOD') }}
     steps:
-        - name: Check out repository code
-          uses: actions/checkout@v2
-          with:
+      - name: Get last BMOD Client tag
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: .github/workflows/bmodtag
+          sparse-checkout-cone-mode: false
+          path: check
+          
+      - name: Download latest BMOD Client release
+        id: download-release
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "better-modernized-combat/bmod-client"
+          fileName: "Release.7z"
+          latest: true
+          extract: true
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M')"
+          
+      - name: Is there a new release?
+        env:
+          TAG: ${{steps.download-release.outputs.tag_name}}
+        run: if( (Get-Content -Path .\check\.github\workflows\bmodtag) -ne $env:TAG ) { echo "NEW=true" >> $env:GITHUB_ENV }
+
+      - name: Check out repository code
+        if: env.NEW == 'true'
+        uses: actions/checkout@v3
+        with:
             fetch-depth: 0
-        
-        - name: Install Inno
-          run: |
+            path: staging
+
+      - name: Copy new Release.7z file
+        if: env.NEW == 'true'
+        run: |
+            copy Release.7z ${{ github.workspace }}\Assets\Mod\freelancerbmod.7z
+
+      - name: Install Inno
+        run: |
             choco install innosetup
 
-        - name: Add mod zip
-          run: |
-            type NUL > ${{ github.workspace }}\Assets\Mod\freelancerbmod.7z
-          shell: cmd
-            
-        - name: Compile script
-          run: |
+      - name: Compile script
+        run: |
             "%programfiles(x86)%\Inno Setup 6\iscc.exe" "setup.iss"
-          shell: cmd
+        shell: cmd
+
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ steps.download-release.outputs.tag_name }}
+            release_name: "${{ steps.download-release.outputs.tag_name }} | ${{ steps.date.outputs.date }}"
+            body: |
+                ${{ steps.download-release.outputs.tag_name }}
+            draft: false
+            prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }} 
+            asset_path: ${{ github.workspace }}\Output\FreelancerBMODSetup.exe
+            asset_name: FreelancerBMODSetup.exe
+            asset_content_type: application/exe
