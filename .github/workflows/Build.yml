@@ -111,5 +111,5 @@ jobs:
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add .github/workflows/bmodtag
-            git commit -m "Update FLHook to $env:TAG"
+            git commit -m "Update BMOD to $env:TAG"
             git push
