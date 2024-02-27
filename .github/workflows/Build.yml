@@ -1,12 +1,12 @@
 name: build
-on: push
-   # push:
-       # branches:
-        #    - main
-       # paths:
-        #    - 'Assets/**'
-         #   - 'Scripts/**'
-          #  - '**.iss'
+on: 
+   push:
+        branches:
+            - main
+        paths:
+            - 'Assets/**'
+            - 'Scripts/**'
+            - '**.iss'
 jobs:
   build-installer:
     runs-on: windows-latest
