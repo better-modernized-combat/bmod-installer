@@ -72,7 +72,8 @@ jobs:
       - name: Copy new Release.7z file
         if: env.NEW == 'true' 
         run: |
-            Expand-Archive -LiteralPath '${{ github.workspace }}\Release.7z' -DestinationPath '${{ github.workspace }}/freelancer-bmod-0.1'
+            
+            7z x ${{ github.workspace }}\Release.7z -o${{ github.workspace }}/freelancer-bmod-0.1
             7z a -t7z -mx=9 ${{ github.workspace }}/staging/Assets/Mod/freelancerbmod.7z ${{ github.workspace }}/freelancer-bmod-0.1
 
            # Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\staging\Assets\Mod\freelancerbmod.7z
