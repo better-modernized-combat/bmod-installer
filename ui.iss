@@ -7,22 +7,6 @@ var
   DownloadPage: TDownloadWizardPage;
   # endif
 
-  // Optional pages
-  DxWrapperPage: TWizardPage;
-  DxWrapperPage2: TWizardPage;
-  DgVoodooPage: TWizardPage;
-  DgVoodooPage2: TWizardPage;
-
-  // Localization
-  lblEnglishImprovements: TLabel;
-  EnglishImprovements: TCheckBox;
-  descEnglishImprovements: TNewStaticText;
-
-  // Russian fonts
-  lblRussianFonts: TLabel;
-  RussianFonts: TCheckBox;
-  descRussianFonts: TNewStaticText;
-
 // Report on download progress
 # if !AllInOneInstall
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
