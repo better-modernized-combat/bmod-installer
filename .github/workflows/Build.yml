@@ -7,6 +7,8 @@ on:
             - 'Assets/**'
             - 'Scripts/**'
             - '**.iss'
+   repository_dispatch:
+    types: [trigger-workflow]
 jobs:
   build-installer:
     runs-on: windows-latest
