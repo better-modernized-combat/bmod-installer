@@ -56,7 +56,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\EXE\{#MyAppExeName}"
-Name: "{commondesktop}\Freelancer BMOD"; Filename: "{app}\EXE\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{commondesktop}\Freelancer BMOD"; Filename: "{app}\EXE\{#MyAppExeName}"; Tasks: desktopicon; Parameters: "-w";
 
 [Files]
 Source: "Assets\Text\installinfo.txt"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
@@ -77,7 +77,7 @@ Source: "Assets\Mod\freelancerbmod.7z"; DestDir: "{tmp}"; Flags: nocompression d
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\vcredist.ps1"""; \
   WorkingDir: {app}; Flags: runhidden
-Filename: "{app}\EXE\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\EXE\{#MyAppExeName}"; Parameters: "-w"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"

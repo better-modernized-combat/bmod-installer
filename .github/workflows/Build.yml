@@ -1,6 +1,6 @@
 name: build
 on: 
-    push:
+   push:
         branches:
             - main
         paths:
@@ -72,7 +72,11 @@ jobs:
       - name: Copy new Release.7z file
         if: env.NEW == 'true' 
         run: |
-            Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\staging\Assets\Mod\freelancerbmod.7z
+            
+            7z x ${{ github.workspace }}\Release.7z -o${{ github.workspace }}/freelancer-bmod-0.1
+            7z a -t7z -mx=9 ${{ github.workspace }}/staging/Assets/Mod/freelancerbmod.7z ${{ github.workspace }}/freelancer-bmod-0.1
+
+           # Copy-Item ${{ github.workspace }}\Release.7z -Destination ${{ github.workspace }}\staging\Assets\Mod\freelancerbmod.7z
 
       - name: Install Inno
         if: env.NEW == 'true'
