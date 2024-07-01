@@ -1,4 +1,8 @@
 # Freelancer: BMOD Inno Installer Script
+![Discord](https://img.shields.io/discord/676300713210413087?logo=discord&label=Discord&color=purple)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/better-modernized-combat/bmod-client?label=Issues)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/better-modernized-combat/bmod-client?color=green&label=Issues)
+![GitHub Release](https://img.shields.io/github/v/release/better-modernized-combat/bmod-client?label=Release)
 
 This is a setup script for [Freelancer: BMOD](https://github.com/better-modernized-combat/bmod-client). It was created using Inno Setup and uses custom Pascal scripting. This has been forked from the excellent [Freelancer HD Edition Installer](https://github.com/oliverpechey/Freelancer-HD-Edition-Installer)
 
