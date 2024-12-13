@@ -83,7 +83,7 @@ Filename: "{app}\EXE\{#MyAppExeName}"; Parameters: "-w"; Description: "{cm:Launc
 Type: filesandordirs; Name: "{app}"
 
 [Messages]
-WelcomeLabel2=Freelancer: Better Modernized Combat (BMOD) is a modification for Freelancer, the 2003 space shooter by Chris Roberts. The core goal of the mod is to create a fun and compelling PvE experience for solo and group players in a multiplayer setting.%n%nThis installer requires a clean, freshly installed Freelancer directory.
+WelcomeLabel2=Freelancer: Better Modernized Combat (BMOD) is a modification for Freelancer, the 2003 space shooter by Digital Anvil. The core goal of the mod is to create a fun and compelling PvE experience for solo and group players in a multiplayer setting.%n%nThis installer requires a clean, freshly installed Freelancer directory.
 FinishedLabel=Setup has finished installing [name] on your computer. The application may be launched by selecting the installed shortcut.%n%nNOTE: [name] has been installed as a separate application. Therefore, your vanilla Freelancer installation has not been modified and can still be played at any time.
 
 [Code]
